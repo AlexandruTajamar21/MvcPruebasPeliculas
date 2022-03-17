@@ -1,0 +1,89 @@
+﻿@model IEnumerable<MvcEjercicioPruebas.Models.Pelicula>
+
+@{
+    ViewData["Title"] = "Peliculas";
+}
+
+<h1>Peliculas</h1>
+
+<p>
+    <a asp-controller="Peliculas" asp-action="InsertPelicula">Nueva</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idPelicula)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idDistribuidor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idGenero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idNacionalidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.argumento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.foto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaEstreno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.actores)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.duracion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idPelicula)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idDistribuidor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idGenero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.titulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idNacionalidad)
+            </td>
+            <td style="height:200px">
+                @Html.DisplayFor(modelItem => item.argumento)
+            </td>
+            <td>
+                <img src="@item.foto" style="height:200px;width:250px"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaEstreno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.actores)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.duracion)
+            </td>
+            <td>
+                <a asp-controller="Peliculas" asp-action="DetallesPelicula" asp-route-idPelicula="@item.idPelicula" class="btn btn-info">Detalles</a>
+                <a asp-controller="Peliculas" asp-action="DeletePelicula" asp-route-idPelicula="@item.idPelicula" class="btn btn-danger">Delete</a>
+                <a asp-controller="Peliculas" asp-action="UpdatePelicula" asp-route-idPelicula="@item.idPelicula" class="btn btn-danger">Update</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

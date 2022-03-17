@@ -1,0 +1,215 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Scripts{
+    <script>
+
+        var urlApi = "https://ejerciciopruebasape.azurewebsites.net/";
+
+        $(document).ready(function () {
+            /*cargarPeliculas();*/
+            cargarPeliculasObjetos();
+
+            $("#btnAnadir").click(function () {
+                var id = $("#idPelicula").val();
+                var idDistribuidora = $("#distribuidor").val();
+                var idGenero = $("#genero").val();
+                var titulo = $("#titulo").val();
+                var nacionalidad = $("#nacionalidad").val();
+                var argumento = $("#argumento").val();
+                var foto = $("#foto").val();
+                var actores = $("#actores").val();
+                var duracion = $("#duracion").val();
+                var pelicula = new Object();
+                pelicula.idPelicula = parseInt(id);
+                pelicula.idDistribuidor = parseInt(idDistribuidora);
+                pelicula.idGenero = parseInt(idGenero);
+                pelicula.titulo = titulo;
+                pelicula.idNacionalidad = nacionalidad;
+                pelicula.argumento = argumento;
+                pelicula.foto = foto;
+                pelicula.fechaEstreno = "2022-03-17T17:38:04.014Z";
+                pelicula.actores = actores;
+                pelicula.duracion = duracion;
+                console.log(pelicula.idPelicula);
+                //EL SERVICIO RECIBE JSON, CONVERTIMOS EL OBJETO
+                //A JSON
+                var json = JSON.stringify(pelicula);
+                var request = "/api/peliculas";
+                $.ajax({
+                    url: urlApi + request
+                    , type: "POST"
+                    , data: json
+                    , contentType: "application/json"
+                    , success: function () {
+                        cargarPeliculasObjetos();
+                    }
+                });
+            });
+
+            $("#btnModificar").click(function () {
+                var id = $("#idPelicula").val();
+                var idDistribuidora = $("#distribuidor").val();
+                var idGenero = $("#genero").val();
+                var titulo = $("#titulo").val();
+                var nacionalidad = $("#nacionalidad").val();
+                var argumento = $("#argumento").val();
+                var foto = $("#foto").val();
+                var actores = $("#actores").val();
+                var duracion = $("#duracion").val();
+                var pelicula = new Object();
+                pelicula.idPelicula = parseInt(id);
+                pelicula.idDistribuidor = parseInt(idDistribuidora);
+                pelicula.idGenero = parseInt(idGenero);
+                pelicula.titulo = titulo;
+                pelicula.idNacionalidad = nacionalidad;
+                pelicula.argumento = argumento;
+                pelicula.foto = foto;
+                pelicula.fechaEstreno = "2022-03-17T17:38:04.014Z";
+                pelicula.actores = actores;
+                pelicula.duracion = duracion;
+                var json = JSON.stringify(pelicula);
+                var request = "/api/peliculas";
+                $.ajax({
+                    url: urlApi + request
+                    , type: "PUT"
+                    , data: json
+                    , contentType: "application/json"
+                    , success: function () {
+                        cargarPeliculasObjetos();
+                    }
+                });
+            });
+
+            $("#btnEliminar").click(function () {
+                var id = $("#idPelicula").val();
+                var request = "/api/peliculas/" + id;
+                $.ajax({
+                    url: urlApi + request
+                    , type: "DELETE"
+                    , success: function () {
+                        cargarPeliculasObjetos();
+                    }
+                });
+            });
+        });
+
+        function cargarPeliculas() {
+            var request = "/api/Peliculas";
+            $.ajax({
+                url: urlApi + request
+                , method: "GET"
+                , dataType: "json"
+                , success: function (data) {
+                    var html = "";
+                    $.each(data, function (index, pelicula) {
+                        html += "<tr>";
+                        html += "<td>" + pelicula.titulo + "</td>";
+                        html += "<td><img src='" + pelicula.foto + "' width='300px'/></td>";
+                        html += "<td>" + pelicula.argumento + "</td>";
+                        html += "<td>" + pelicula.duracion + "</td>";
+                        html += "<td>" + "<button class='delete' value='" + pelicula.idPelicula + "'>Eliminar</button></td>";
+                        html += "</tr>";
+                    });
+                    $("#tablaPeliculas tbody").html(html);
+                }
+            });
+        }
+
+        function cargarPeliculasObjetos()
+        {
+            var request = "/api/Peliculas";
+            $.ajax({
+                url: urlApi + request
+                , method: "GET"
+                , dataType: "json"
+                , success: function (data) {
+                    $("#tablaPeliculas tbody").html("");
+                    $.each(data, function (index, pelicula) {
+                        var tr = $("<tr>");
+                        var tdTitulo = $("<td>", {
+                            "text": pelicula.titulo
+                        });
+                        var tdImagen = $("<td>");
+                        var imgFoto = $("<img>", {
+                            "src": pelicula.foto,
+                            "width" : "300"
+                        });
+                        var tdArgumento = $("<td>", {
+                            "text": pelicula.argumento
+                        });
+                        var tdDuracion = $("<td>", {
+                            "text": pelicula.duracion
+                        });
+                        var tdBtnEliminar = $("<td>");
+                        var btnEliminar = $("<button>", {
+                            "text": "Eliminar",
+                            "class": "btn btn-danger",
+                            "data-id": pelicula.idPelicula
+                        });
+                        tdImagen.append(imgFoto);
+                        tdBtnEliminar.append(btnEliminar);
+                        tr.append(tdTitulo).append(tdImagen).append(tdArgumento).append(tdDuracion).append(tdBtnEliminar);
+                        $("#tablaPeliculas tbody").append(tr);
+
+                        btnEliminar.click(function () {
+                            var id = $(this).data("id");
+                            console.log(id);
+                            var request = "/api/peliculas/" + id;
+                            $.ajax({
+                                url: urlApi + request
+                                , type: "DELETE"
+                                , success: function () {
+                                    cargarPeliculasObjetos();
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+        }
+    </script>
+}
+
+
+<div class="text-center">
+    <h1 class="display-4">CRUD desde la vista</h1>
+    <div>
+        <label>Id Pelicula : </label>
+        <input id="idPelicula" type="text" class="form-control" />
+        <label>ID Distribuidor</label>
+        <input type="text" id="distribuidor" class="form-control" />
+        <label>ID Genero</label>
+        <input type="text" id="genero" class="form-control" />
+        <label>Titulo</label>
+        <input type="text" id="titulo" class="form-control" />
+        <label>ID Nacionalidad</label>
+        <input type="text" id="nacionalidad" class="form-control" />
+        <label>Argumento</label>
+        <input type="text" id="argumento" class="form-control" />
+        <label>Foto</label>
+        <input type="text" id="foto" class="form-control" />
+        <label>Actores</label>
+        <input type="text" id="actores" class="form-control" />
+        <label>Duración</label>
+        <input type="text" id="duracion" class="form-control" />
+        <button id="btnAnadir" class="btn btn-success">Añadir</button>
+        <button id="btnModificar" class="btn btn-warning">Modificar</button>
+        <button id="btnEliminar" class="btn btn-danger">Eliminar</button>
+    </div>
+    <div>
+        <table class="table-bordered" id="tablaPeliculas">
+            <thead>
+                <tr>
+                    <th>TITULO</th>
+                    <th>IMAGEN</th>
+                    <th>ARGUMENTO</th>
+                    <th>DURACION</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
